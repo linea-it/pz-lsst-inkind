@@ -1,7 +1,7 @@
 # Conda Environment and Kernel Configuration for Open OnDemand (LIneA) – Make HATS Notebooks
 
 Author: Luigi Silva
-Last reviewed: Jun. 24, 2025
+Last reviewed: Jun. 26, 2025
 
 ---
 
