@@ -40,6 +40,7 @@ input_user_selected_cols:
 
 # --- Input column type and patterns ---
 input_col_type: "mag"  # Options: "flux" or "mag"
+input_col_model: null # Optional
 input_col_pattern: "MAG_AUTO_BAND_DERED"
 input_err_pattern: "MAGERR_AUTO_BAND"
 

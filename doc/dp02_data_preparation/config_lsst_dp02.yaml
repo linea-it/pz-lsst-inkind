@@ -43,6 +43,7 @@ input_user_selected_cols:
 
 # --- Input column type and patterns ---
 input_col_type: "flux"  # Options: "flux" or "mag"
+input_col_model: "cModelFlux" # Optional
 input_col_pattern: "BAND_cModelFlux"
 input_err_pattern: "BAND_cModelFluxErr"
 
