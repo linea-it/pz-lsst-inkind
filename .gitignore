@@ -143,3 +143,8 @@ dmypy.json
 
 # pzserver
 ondemand/.token.txt
+
+# notebooks configs
+doc/dp02_data_preparation/config.yaml
+doc/make_hats_notebooks/config.yaml
+
