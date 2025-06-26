@@ -1,7 +1,7 @@
 # Conda Environment and Kernel Configuration for Open OnDemand (LIneA) - Data Preparation Scripts
 
 Author: Luigi Silva  
-Last reviewed: Apr. 04, 2025
+Last reviewed: Jun. 26, 2025
 
 ## Accessing Open OnDemand
 To access the Open OnDemand platform, follow the steps below:
