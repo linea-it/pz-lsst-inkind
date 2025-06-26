@@ -8,7 +8,7 @@ user_base_path: "/scratch/users/<your-user>/dp02_object_data_preparation"
 # ============================
 
 # --- Catalog options ---
-DP_which_release: "LSST_DP02"
+DP_which_release: "LSST_DP02"  # Options: "LSST_DP02", "DES_DR2"
 DP_filter_by_detect_isPrimary: true
 DP_is_objectId_in_the_index: true
 
@@ -41,12 +41,10 @@ input_user_selected_cols:
   - tract
   - patch
 
-# --- Input column name patterns ---
-flux_col_pattern: "BAND_cModelFlux"
-err_col_pattern: "BAND_cModelFluxErr"
-mag_col_pattern: null
-magerr_col_pattern: null
-mag_dered_col_pattern: null
+# --- Input column type and patterns ---
+input_col_type: "flux"  # Options: "flux" or "mag"
+input_col_pattern: "BAND_cModelFlux"
+input_err_pattern: "BAND_cModelFluxErr"
 
 # --- ID and coordinate columns ---
 id_col: "objectId"
@@ -67,46 +65,57 @@ A_EBV:
 # ============================
 # OUTPUT CONFIGURATIONS
 # ============================
+
 # --- Output options ---
 DP_save_the_data: true
-save_output_as: "parquet"  # options: "parquet", "csv", "hdf5"
+save_output_as: "parquet"  # Options: "parquet", "csv", "hdf5"
 DP_repartition_files: true
 DP_target_rows_per_part: 130000
 
-# --- Output magnitude column name customization ---
-DP_personalized_final_names: true
-DP_pesonalized_which_band_case: "lower_case"
-DP_mag_final_name_pattern: "mag_BAND"
-DP_magerr_final_name_pattern: "magerr_BAND"
+# --- Output column name customization ---
+DP_pesonalized_which_band_case: "lower_case"  # Options: "lower_case", "upper_case", "none"
+DP_col_final_name_pattern: "mag_dered_BAND"
+DP_err_final_name_pattern: "magerr_dered_BAND"
 
 # --- Magnitude and dereddening ---
 DP_compute_magnitude: true
 DP_compute_dereddening: true
+DP_keep_flux_columns_when_computing_mag_or_dered: false
 
 # --- Rounding options ---
-DP_round_mag: true
-DP_round_mag_decimal_cases: 5
-DP_round_magerr: true
-DP_round_magerr_decimal_cases: 5
+DP_round_col: true
+DP_round_col_decimal_cases: 5
+DP_round_err: true
+DP_round_err_decimal_cases: 5
 
 # --- Invalid value handling ---
-DP_replace_all_mag_invalid_values: true
-DP_replace_only_mag_with_invalid_magerr: false
-DP_replace_all_magerr_invalid_values: true
-DP_replace_only_magerr_with_invalid_mag: false
+DP_replace_invalid_values: true
+
+# Options:
+# - "all": replace all invalid values
+# - "only_with_invalid_err": replace only if the error is invalid
+# - null: do not replace
+DP_how_to_replace_col_values: "all"
+
+# Options:
+# - "all": replace all invalid errors
+# - "only_with_invalid_col": replace only if the value is invalid
+# - null: do not replace
+DP_how_to_replace_err_values: "only_with_invalid_col"
+
 DP_cross_invalidate: true
 
-# Use "null" if you want to replace by np.nan
-DP_mag_value_to_replace: 999.0
-DP_magerr_value_to_replace: 999.0
+# Use "null" to replace with NaN
+DP_col_value_to_replace: 999.0
+DP_err_value_to_replace: 999.0
 
 # --- Invalidity pattern ---
-DP_is_nan_and_inf_invalid_for_mag: true
-DP_is_nan_and_inf_invalid_for_magerr: true
-DP_set_some_limit_as_invalid_for_mag: true
-DP_invalid_limit_value_for_mag: 999.0
-DP_set_some_limit_as_invalid_for_magerr: true
-DP_invalid_limit_value_for_magerr: 999.0
+DP_is_nan_and_inf_invalid_for_col: true
+DP_is_nan_and_inf_invalid_for_err: true
+DP_set_some_limit_as_invalid_for_col: true
+DP_invalid_limit_value_for_col: 999.0
+DP_set_some_limit_as_invalid_for_err: true
+DP_invalid_limit_value_for_err: 999.0
 
 # ============================
 # PART 3 — CLUSTER CONFIGURATIONS
@@ -114,7 +123,6 @@ DP_invalid_limit_value_for_magerr: 999.0
 CLUSTER_save_the_dask_jobs_info: true
 CLUSTER_extra_dask_configs: false
 
-CLUSTER_interface: "ib0"
 CLUSTER_queue: "cpu"
 CLUSTER_cores: 50
 CLUSTER_processes: 1
@@ -137,12 +145,12 @@ CLUSTER_dask_config:
 DP_do_validation: true
 DP_compare_with_template: true
 
-# Compare with template configuration options (used only if DP_compare_with_template = true)
-DP_template_type: "parquet"
+# Template comparison configuration
+DP_template_type: "parquet"  # Options: "parquet", "fits"
 template_path: "/data/cl/lsst/dp02/secondary/catalogs/skinny/parquet"
 template_pattern: "*.parquet"
 template_id_col: "objectId"
-template_mag_col: "mag_BAND"
+template_target_col: "mag_BAND"  # Can be any column: e.g. "flux_BAND", "mag_BAND", etc.
 
 selected_bands_for_comparisson: ["u", "g", "r", "i", "z", "y"]
 template_bands_for_comparisson: ["u", "g", "r", "i", "z", "y"]

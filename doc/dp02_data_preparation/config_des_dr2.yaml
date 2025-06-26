@@ -8,7 +8,7 @@ user_base_path: "/scratch/users/<your-user>/des_dr2_data_preparation"
 # ============================
 
 # --- Catalog options ---
-DP_which_release: "DES_DR2"
+DP_which_release: "DES_DR2"  # Options: "LSST_DP02", "DES_DR2"
 DP_filter_by_detect_isPrimary: false
 DP_is_objectId_in_the_index: false
 
@@ -17,8 +17,8 @@ DP_is_objectId_in_the_index: false
 # ============================
 
 # --- Input catalog paths ---
-input_catalog_folder: '/data/public/des/dr2/primary/catalogs/coadd'
-input_catalog_pattern: '*.fits'
+input_catalog_folder: "/data/public/des/dr2/primary/catalogs/coadd"
+input_catalog_pattern: "*.fits"
 
 # --- Selected columns from the input catalog ---
 input_user_selected_cols:
@@ -38,12 +38,10 @@ input_user_selected_cols:
   - EXTENDED_CLASS_COADD
   - FLAGS_I
 
-# --- Input column name patterns ---
-flux_col_pattern: null
-err_col_pattern: null
-mag_col_pattern: null
-magerr_col_pattern: "MAGERR_AUTO_BAND"
-mag_dered_col_pattern: "MAG_AUTO_BAND_DERED"
+# --- Input column type and patterns ---
+input_col_type: "mag"  # Options: "flux" or "mag"
+input_col_pattern: "MAG_AUTO_BAND_DERED"
+input_err_pattern: "MAGERR_AUTO_BAND"
 
 # --- ID and coordinate columns ---
 id_col: "COADD_OBJECT_ID"
@@ -61,44 +59,48 @@ A_EBV: null
 
 # --- Output options ---
 DP_save_the_data: true
-save_output_as: "parquet"  # options: "parquet", "csv", "hdf5"
+save_output_as: "parquet"  # Options: "parquet", "csv", "hdf5"
 DP_repartition_files: true
 DP_target_rows_per_part: 130000
 
-# --- Output magnitude column name customization ---
-DP_personalized_final_names: true
-DP_pesonalized_which_band_case: "lower_case"
-DP_mag_final_name_pattern: "mag_BAND"
-DP_magerr_final_name_pattern: "magerr_BAND"
+# --- Output column name customization ---
+DP_pesonalized_which_band_case: "lower_case"  # Options: "lower_case", "upper_case", "none"
+DP_col_final_name_pattern: "mag_BAND"
+DP_err_final_name_pattern: "magerr_BAND"
 
 # --- Magnitude and dereddening ---
 DP_compute_magnitude: false
 DP_compute_dereddening: false
+DP_keep_flux_columns_when_computing_mag_or_dered: false
 
 # --- Rounding options ---
-DP_round_mag: false
-DP_round_mag_decimal_cases: 5
-DP_round_magerr: false
-DP_round_magerr_decimal_cases: 5
+DP_round_col: false
+DP_round_col_decimal_cases: 5
+DP_round_err: false
+DP_round_err_decimal_cases: 5
 
 # --- Invalid value handling ---
-DP_replace_all_mag_invalid_values: true
-DP_replace_only_mag_with_invalid_magerr: false
-DP_replace_all_magerr_invalid_values: false
-DP_replace_only_magerr_with_invalid_mag: true
+DP_replace_invalid_values: true
+
+# Options: "all", "only_with_invalid_err", or null
+DP_how_to_replace_col_values: "all"
+
+# Options: "all", "only_with_invalid_col", or null
+DP_how_to_replace_err_values: "only_with_invalid_col"
+
 DP_cross_invalidate: false
 
-# Use "null" if you want to replace by np.nan
-DP_mag_value_to_replace: 99.0
-DP_magerr_value_to_replace: 99.0
+# Use null to replace with np.nan
+DP_col_value_to_replace: 99.0
+DP_err_value_to_replace: 99.0
 
 # --- Invalidity pattern ---
-DP_is_nan_and_inf_invalid_for_mag: true
-DP_is_nan_and_inf_invalid_for_magerr: true
-DP_set_some_limit_as_invalid_for_mag: true
-DP_invalid_limit_value_for_mag: 99.0
-DP_set_some_limit_as_invalid_for_magerr: true
-DP_invalid_limit_value_for_magerr: 99.0
+DP_is_nan_and_inf_invalid_for_col: true
+DP_is_nan_and_inf_invalid_for_err: true
+DP_set_some_limit_as_invalid_for_col: true
+DP_invalid_limit_value_for_col: 99.0
+DP_set_some_limit_as_invalid_for_err: true
+DP_invalid_limit_value_for_err: 99.0
 
 # ============================
 # PART 3 — CLUSTER CONFIGURATIONS
@@ -106,7 +108,6 @@ DP_invalid_limit_value_for_magerr: 99.0
 CLUSTER_save_the_dask_jobs_info: true
 CLUSTER_extra_dask_configs: false
 
-CLUSTER_interface: "ib0"
 CLUSTER_queue: "cpu"
 CLUSTER_cores: 50
 CLUSTER_processes: 1
@@ -129,14 +130,13 @@ CLUSTER_dask_config:
 DP_do_validation: true
 DP_compare_with_template: false
 
-# Compare with template configuration options (used only if DP_compare_with_template = true)
+# The template configuration is ignored when DP_compare_with_template is false
 DP_template_type: null
 template_path: null
 template_pattern: null
 template_id_col: null
-template_mag_col: null
+template_target_col: null
 
 selected_bands_for_comparisson: null
 template_bands_for_comparisson: null
-
 comparisson_precision: null
