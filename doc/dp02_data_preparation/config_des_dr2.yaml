@@ -113,6 +113,7 @@ DP_invalid_limit_value_for_err: 99.0
 CLUSTER_save_the_dask_jobs_info: true
 CLUSTER_extra_dask_configs: false
 
+CLUSTER_interface: "ib0"
 CLUSTER_queue: "cpu"
 CLUSTER_cores: 50
 CLUSTER_processes: 1
