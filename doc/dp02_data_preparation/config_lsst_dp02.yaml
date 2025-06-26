@@ -9,8 +9,12 @@ user_base_path: "/scratch/users/<your-user>/dp02_object_data_preparation"
 
 # --- Catalog options ---
 DP_which_release: "LSST_DP02"  # Options: "LSST_DP02", "DES_DR2"
-DP_filter_by_detect_isPrimary: true
-DP_is_objectId_in_the_index: true
+DP_is_id_in_the_index: true
+
+DP_filter_by_boolean_column: true
+DP_which_boolean_column: "detect_isPrimary"
+DP_which_value_to_keep: true
+DP_drop_column_after_filter: true
 
 # ============================
 # INPUT CONFIGURATIONS
