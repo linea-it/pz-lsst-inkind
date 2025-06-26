@@ -22,7 +22,6 @@ curl -L -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 chmod +x Miniconda3-latest-Linux-x86_64.sh
 ./Miniconda3-latest-Linux-x86_64.sh -p $SCRATCH/miniconda
 source miniconda/bin/activate
-conda deactivate  # Necessary to deactivate the "base" environment
 ```
 
 ### 2. Create the Conda environment and install required packages
@@ -35,6 +34,10 @@ conda config --add channels pyviz
 ```
 I also strongly recomend you to use the mamba solver. See instructions in the following web page:
 https://conda.github.io/conda-libmamba-solver/user-guide/
+
+```bash
+conda config --set solver libmamba 
+```
 
 To create the environment:
 
@@ -75,7 +78,7 @@ import dustmaps.config
 from dustmaps.sfd import fetch
 
 user = getpass.getuser()
-dustmaps.config.config['data_dir'] = f'/lustre/t0/scratch/users/{user}/data_preparation/lib/python3.12/site-packages/dustmaps/data'
+dustmaps.config.config['data_dir'] = f'/scratch/users/{user}/data_preparation/lib/python3.12/site-packages/dustmaps/data'
 fetch()
 ```
 
@@ -93,7 +96,7 @@ Before executing the ```1_Data_Preparation``` notebook, make sure to:
 2. Open the YAML file and edit the field ```user_base_path``` to reflect your username, for example:
 
 ```python
-"/lustre/t0/scratch/users/<your-user>/dp02_object_data_preparation"
+"/scratch/users/<your-user>/dp02_object_data_preparation"
 ```
 
 Replace ```<your-user>``` with your actual user directory name on the system.
