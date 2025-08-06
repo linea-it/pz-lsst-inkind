@@ -1,0 +1,77 @@
+# Base directory where processNNN/output and logs will be created
+base_path: /scratch/users/julia/hats_skinny/
+
+input_catalog:
+  # Path to the directory containing the catalog files
+  path: /scratch/users/julia/dp02_object_data_preparation/DP_run_LSST_DP02_gaap1p0_mag_2025-06-26_17-03/data
+
+  # File name pattern to match catalog files
+  files: 'objectTable_tract_*.parquet'
+
+  # Columns to read from the input files
+  # Use YAML block style (with dashes) or inline style ([col1, col2, col3])
+  # Set to null or remove this field to read all columns automatically
+  selected_columns:
+    - id
+    - objectId
+    - coord_ra
+    - coord_dec
+    - refExtendedness
+    - tract
+    - patch
+    - mag_u
+    - magerr_u
+    - mag_g
+    - magerr_g
+    - mag_r
+    - magerr_r
+    - mag_i
+    - magerr_i
+    - mag_z
+    - magerr_z
+    - mag_y
+    - magerr_y
+  
+
+  # selected_columns: null  # or remove this line to read all columns
+
+  # RA and DEC column names
+  ra_column: coord_ra
+  dec_column: coord_dec
+
+  # Name of the output HATS folder (inside processNNN/output)
+  hats_folder_name: catalog_hats
+
+  # File format of the input catalog
+  # Supported values: "parquet", "csv", "fits"
+  # Use lowercase only
+  file_type: parquet
+
+  # Optional: define a margin cache threshold (in arcsec)
+  margin_threshold: 1.0
+
+cluster:
+  # Dask/SLURM configuration
+  interface: ib0
+  queue: cpu
+  cores: 50
+  processes: 1
+  memory: 120GB
+  walltime: '01:00:00'
+  account: hpc-bpglsst
+  scale_jobs: 25
+
+  # Whether to save stdout/stderr of Dask jobs into logs/dask_logs
+  save_dask_logs: true
+
+  # Whether to apply the extra_dask_config settings below
+  # Set to true to use memory safety settings in Dask workers
+  extra_configs: false  # change to true to apply extra_dask_config
+
+extra_dask_config:
+  # These settings are applied only if extra_configs is set to true
+  distributed.worker.memory.target: 0.75
+  distributed.worker.memory.spill: 0.85
+  distributed.worker.memory.pause: 0.92
+  distributed.worker.memory.terminate: 0.98
+  distributed.worker.memory.recent-to-old: 0.2

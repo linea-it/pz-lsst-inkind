@@ -1,0 +1,148 @@
+# ============================
+# PART 1 — RUN PATH SETTINGS
+# ============================
+user_base_path: "/scratch/users/<your-user>/des_dr2_data_preparation"
+
+# ============================
+# PART 2 — RUN CONFIGURATIONS
+# ============================
+
+# --- Catalog options ---
+DP_which_release: "DES_DR2"  # Options: "LSST_DP02", "DES_DR2"
+DP_is_id_in_the_index: false
+
+DP_filter_by_boolean_column: false
+DP_which_boolean_column: null # or str
+DP_which_value_to_keep: null
+DP_drop_column_after_filter: null
+
+# ============================
+# INPUT CONFIGURATIONS
+# ============================
+
+# --- Input catalog paths ---
+input_catalog_folder: "/data/public/des/dr2/primary/catalogs/coadd"
+input_catalog_pattern: "*.fits"
+
+# --- Selected columns from the input catalog ---
+input_user_selected_cols:
+  - COADD_OBJECT_ID
+  - RA
+  - DEC
+  - MAG_AUTO_G_DERED
+  - MAG_AUTO_R_DERED
+  - MAG_AUTO_I_DERED
+  - MAG_AUTO_Z_DERED
+  - MAG_AUTO_Y_DERED
+  - MAGERR_AUTO_G
+  - MAGERR_AUTO_R
+  - MAGERR_AUTO_I
+  - MAGERR_AUTO_Z
+  - MAGERR_AUTO_Y
+  - EXTENDED_CLASS_COADD
+  - FLAGS_I
+
+# --- Input column type and patterns ---
+input_col_type: "mag"  # Options: "flux" or "mag"
+input_col_model: null # Optional
+input_col_pattern: "MAG_AUTO_BAND_DERED"
+input_err_pattern: "MAGERR_AUTO_BAND"
+
+# --- ID and coordinate columns ---
+id_col: "COADD_OBJECT_ID"
+ra_col: "RA"
+dec_col: "DEC"
+
+# --- Magnitude bands and conversion ---
+selected_bands: ["G", "R", "I", "Z", "Y"]
+MAG_OFFSET: null
+A_EBV: null
+
+# ============================
+# OUTPUT CONFIGURATIONS
+# ============================
+
+# --- Output options ---
+DP_save_the_data: true
+save_output_as: "parquet"  # Options: "parquet", "csv", "hdf5"
+DP_repartition_files: true
+DP_target_rows_per_part: 130000
+
+# --- Output column name customization ---
+DP_pesonalized_which_band_case: "lower_case"  # Options: "lower_case", "upper_case", "none"
+DP_col_final_name_pattern: "mag_BAND"
+DP_err_final_name_pattern: "magerr_BAND"
+
+# --- Magnitude and dereddening ---
+DP_compute_magnitude: false
+DP_compute_dereddening: false
+DP_keep_flux_columns_when_computing_mag_or_dered: false
+
+# --- Rounding options ---
+DP_round_col: false
+DP_round_col_decimal_cases: 5
+DP_round_err: false
+DP_round_err_decimal_cases: 5
+
+# --- Invalid value handling ---
+DP_replace_invalid_values: true
+
+# Options: "all", "only_with_invalid_err", or null
+DP_how_to_replace_col_values: "all"
+
+# Options: "all", "only_with_invalid_col", or null
+DP_how_to_replace_err_values: "only_with_invalid_col"
+
+DP_cross_invalidate: false
+
+# Use null to replace with np.nan
+DP_col_value_to_replace: 99.0
+DP_err_value_to_replace: 99.0
+
+# --- Invalidity pattern ---
+DP_is_nan_and_inf_invalid_for_col: true
+DP_is_nan_and_inf_invalid_for_err: true
+DP_set_some_limit_as_invalid_for_col: true
+DP_invalid_limit_value_for_col: 99.0
+DP_set_some_limit_as_invalid_for_err: true
+DP_invalid_limit_value_for_err: 99.0
+
+# ============================
+# PART 3 — CLUSTER CONFIGURATIONS
+# ============================
+CLUSTER_save_the_dask_jobs_info: true
+CLUSTER_extra_dask_configs: false
+
+CLUSTER_interface: "ib0"
+CLUSTER_queue: "cpu"
+CLUSTER_cores: 50
+CLUSTER_processes: 1
+CLUSTER_memory: "115GB"
+CLUSTER_walltime: "01:00:00"
+CLUSTER_account: "hpc-bpglsst"
+CLUSTER_dask_scale_number: 26
+
+# Extra Dask configuration options (used only if CLUSTER_extra_dask_configs = true)
+CLUSTER_dask_config:
+  distributed.worker.memory.target: null        
+  distributed.worker.memory.spill: null       
+  distributed.worker.memory.pause: null         
+  distributed.worker.memory.terminate: null      
+  distributed.worker.memory.recent-to-old: null   
+
+# ============================
+# PART 4 — VALIDATION CONFIGURATIONS
+# ============================
+DP_do_validation: true
+DP_compare_with_template: false
+
+# The template configuration is ignored when DP_compare_with_template is false
+DP_template_type: null
+template_path: null
+template_pattern: null
+template_id_col: null
+template_target_col: null
+
+selected_bands_for_comparisson: null
+template_bands_for_comparisson: null
+comparisson_precision: null

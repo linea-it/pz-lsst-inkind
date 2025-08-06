@@ -1,0 +1,31 @@
+# config.yaml
+
+trainfrac: 0.75 
+seed: 87
+gpz_method: "VC" 
+n_basis: 50
+learn_jointly: true 
+hetero_noise: true 
+csl_method: "normal"
+csl_binwidth: 0.1 
+pca_decorrelate: True 
+max_iter: 200
+max_attempt: 100 
+log_errors: True
+redshift_col:  "redshift" 
+log_errors: true 
+zmin: 0.0
+zmax: 3.0 
+nzbins: 301 
+ref_band: "mag_i" 
+replace_error_vals: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1] 
+nondetect_val: 99.0 
+bands: ["mag_u", "mag_g", "mag_r", "mag_i", "mag_z", "mag_y"] 
+err_bands: ["magerr_u", "magerr_g", "magerr_r", "magerr_i", "magerr_z", "magerr_y"]
+mag_limits: 
+   mag_u: 27.79
+   mag_g: 29.04
+   mag_r: 29.06
+   mag_i: 28.62
+   mag_z: 27.98
+   mag_y: 27.05
