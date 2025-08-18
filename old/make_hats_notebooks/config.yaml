@@ -39,7 +39,8 @@ input_catalog:
   ra_column: coord_ra
   dec_column: coord_dec
 
-  # Name of the output collection folder (inside processNNN/output)
+  # Name of the output collection folder (inside processNNN/output) and its subfolders
+  # Be careful! The names have a character limit (it seems the limit is 20)
   collection_folder_name: catalog_collection
   catalog_folder_name: hats
   margin_folder_name: margin_cache
