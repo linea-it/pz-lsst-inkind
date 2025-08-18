@@ -39,8 +39,10 @@ input_catalog:
   ra_column: coord_ra
   dec_column: coord_dec
 
-  # Name of the output HATS folder (inside processNNN/output)
-  hats_folder_name: catalog_hats
+  # Name of the output collection folder (inside processNNN/output)
+  collection_folder_name: catalog_collection
+  catalog_folder_name: hats
+  margin_folder_name: margin_cache
 
   # File format of the input catalog
   # Supported values: "parquet", "csv", "fits"
