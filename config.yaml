@@ -1,0 +1,168 @@
+# ============================
+# PART 1 — RUN PATH SETTINGS
+# ============================
+#user_base_path: "/scratch/users/julia/tsm_lsst_dp0_1_input_data_preparation"
+user_base_path: "/scratch/users/julia/tsm_lsst_dp0_2_input_data_preparation"
+#user_base_path: "/scratch/users/julia/tsm_lsst_dp1_input_data_preparation"
+#user_base_path: "/scratch/users/julia/tsm_des_dr2_main_input_data_preparation"
+#user_base_path: "/scratch/users/julia/tsm_des_y6_gold_input_data_preparation"
+
+# ============================
+# PART 2 — RUN CONFIGURATIONS
+# ============================
+
+# --- Catalog options ---
+DP_which_release: "LSST_DP02"  # Options: "LSST_DP02", "DES_DR2", "LSST_DP01" e "LSST_DP1" (implementar),
+DP_is_id_in_the_index: true # pegar info pelo release    
+DP_filter_by_boolean_column: true
+DP_which_boolean_column: "detect_isPrimary"
+DP_which_value_to_keep: true
+DP_drop_column_after_filter: true
+# TBD: filter by maglim, s/n, etc
+
+
+# ============================
+# INPUT CONFIGURATIONS
+# ============================
+
+# --- Input catalog paths ---
+input_catalog_folder: "/data/cl/lsst/dp0_2/primary/catalogs/object"
+input_catalog_pattern: "*.parq"
+
+# --- Selected columns from the input catalog ---
+input_user_selected_cols:  # output user selected besides photoz observables 
+  - coord_ra
+  - coord_dec
+  - u_cModelFlux
+  - g_cModelFlux
+  - r_cModelFlux
+  - i_cModelFlux
+  - z_cModelFlux
+  - y_cModelFlux
+  - u_cModelFluxErr
+  - g_cModelFluxErr
+  - r_cModelFluxErr
+  - i_cModelFluxErr
+  - z_cModelFluxErr
+  - y_cModelFluxErr
+  - detect_isPrimary
+  - refExtendedness
+  - tract
+  - patch
+
+# --- Input column type and patterns ---
+input_col_type: "flux"  # Options: "flux" or "mag"
+input_col_model: "cModel" # Optional
+input_col_pattern: "BAND_cModelFlux"
+input_err_pattern: "BAND_cModelFluxErr"
+
+# --- ID and coordinate columns ---
+id_col: "objectId"
+ra_col: "coord_ra"
+dec_col: "coord_dec"
+
+# --- Magnitude bands and conversion ---
+selected_bands: ["u", "g", "r", "i", "z", "y"]
+MAG_OFFSET: 31.4
+A_EBV:
+  u: 4.81
+  g: 3.64
+  r: 2.70
+  i: 2.06
+  z: 1.58
+  y: 1.31
+
+# ============================
+# OUTPUT CONFIGURATIONS
+# ============================
+
+# --- Output options ---
+DP_save_the_data: true
+save_output_as: "parquet"  # Options: "parquet", "csv", "hdf5"
+DP_repartition_files: true
+DP_target_rows_per_part: 130000
+
+# --- Output column name customization ---
+DP_pesonalized_which_band_case: "lower_case"  # Options: "lower_case", "upper_case", "none"
+DP_col_final_name_pattern: "flux_BAND"
+DP_err_final_name_pattern: "flurerr_BAND"
+
+# --- Magnitude and dereddening ---
+DP_compute_magnitude: false
+DP_compute_dereddening: true
+DP_keep_flux_columns_when_computing_mag_or_dered: false
+
+# --- Rounding options ---
+DP_round_col: true
+DP_round_col_decimal_cases: 5
+DP_round_err: true
+DP_round_err_decimal_cases: 5
+
+# --- Invalid value handling ---
+DP_replace_invalid_values: true
+
+# Options:
+# - "all": replace all invalid values
+# - "only_with_invalid_err": replace only if the error is invalid
+# - null: do not replace
+DP_how_to_replace_col_values: "all"
+
+# Options:
+# - "all": replace all invalid errors
+# - "only_with_invalid_col": replace only if the value is invalid
+# - null: do not replace
+DP_how_to_replace_err_values: "only_with_invalid_col"
+
+DP_cross_invalidate: true
+
+# Use "null" to replace with NaN
+DP_col_value_to_replace: 999.0
+DP_err_value_to_replace: 999.0
+
+# --- Invalidity pattern ---
+DP_is_nan_and_inf_invalid_for_col: true
+DP_is_nan_and_inf_invalid_for_err: true
+DP_set_some_limit_as_invalid_for_col: false
+DP_invalid_limit_value_for_col: 999.0
+DP_set_some_limit_as_invalid_for_err: false
+DP_invalid_limit_value_for_err: 999.0
+
+# ============================
+# PART 3 — CLUSTER CONFIGURATIONS
+# ============================
+CLUSTER_save_the_dask_jobs_info: true
+CLUSTER_extra_dask_configs: false
+
+CLUSTER_interface: "ib0"
+CLUSTER_queue: "cpu"
+CLUSTER_cores: 50
+CLUSTER_processes: 1
+CLUSTER_memory: "115GB"
+CLUSTER_walltime: "01:00:00"
+CLUSTER_account: "hpc-bpglsst"
+CLUSTER_dask_scale_number: 15
+
+# Extra Dask configuration options (used only if CLUSTER_extra_dask_configs = true)
+CLUSTER_dask_config:
+  distributed.worker.memory.target: null
+  distributed.worker.memory.spill: null
+  distributed.worker.memory.pause: null  
+  distributed.worker.memory.terminate: null
+  distributed.worker.memory.recent-to-old: null
+
+# ============================
+# PART 4 — VALIDATION CONFIGURATIONS
+# ============================
+DP_do_validation: true
+DP_compare_with_template: false
+
+# Template comparison configuration
+DP_template_type: "parquet"  # Options: "parquet", "fits"
+template_path: "/data/cl/lsst/dp0_2/secondary/catalogs/skinny/parquet"
+template_pattern: "*.parquet"
+template_id_col: "objectId"
+template_target_col: "mag_BAND"  # Can be any column: e.g. "flux_BAND", "mag_BAND", etc.
+
+selected_bands_for_comparisson: ["u", "g", "r", "i", "z", "y"]
+template_bands_for_comparisson: ["u", "g", "r", "i", "z", "y"]
+comparisson_precision: 0.0001
