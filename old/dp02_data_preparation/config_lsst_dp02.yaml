@@ -46,7 +46,7 @@ input_user_selected_cols:
   - patch
 
 # --- Input column type and patterns ---
-input_col_type: "flux"  # Options: "flux" or "mag"
+input_col_type: "flux"  # Options: "flux", "mag", "flux_dered", "mag_dered"
 input_col_model: "cModelFlux" # Optional
 input_col_pattern: "BAND_cModelFlux"
 input_err_pattern: "BAND_cModelFluxErr"
@@ -76,6 +76,7 @@ DP_save_the_data: true
 save_output_as: "parquet"  # Options: "parquet", "csv", "hdf5"
 DP_repartition_files: true
 DP_target_rows_per_part: 130000
+DP_order_by: "tract"
 
 # --- Output column name customization ---
 DP_pesonalized_which_band_case: "lower_case"  # Options: "lower_case", "upper_case", "none"

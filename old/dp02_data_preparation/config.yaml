@@ -1,7 +1,7 @@
 # ============================
 # PART 1 — RUN PATH SETTINGS
 # ============================
-user_base_path: "/scratch/users/julia/dp02_object_data_preparation"
+user_base_path: "/scratch/users/luigi.silva/pz-lsst-inkind/old/dp02_data_preparation"
 
 # ============================
 # PART 2 — RUN CONFIGURATIONS
@@ -21,35 +21,35 @@ DP_drop_column_after_filter: true
 # ============================
 
 # --- Input catalog paths ---
-input_catalog_folder: "/data/cl/lsst/dp02/primary/catalogs/object"
+input_catalog_folder: "/data/cl/lsst/dp0_2/primary/catalogs/object"
 input_catalog_pattern: "*.parq"
 
 # --- Selected columns from the input catalog ---
 input_user_selected_cols:
   - coord_ra
   - coord_dec
-  - u_gaap1p0Flux
-  - g_gaap1p0Flux
-  - r_gaap1p0Flux
-  - i_gaap1p0Flux
-  - z_gaap1p0Flux
-  - y_gaap1p0Flux
-  - u_gaap1p0FluxErr
-  - g_gaap1p0FluxErr
-  - r_gaap1p0FluxErr
-  - i_gaap1p0FluxErr
-  - z_gaap1p0FluxErr
-  - y_gaap1p0FluxErr
+  - u_cModelFlux
+  - g_cModelFlux
+  - r_cModelFlux
+  - i_cModelFlux
+  - z_cModelFlux
+  - y_cModelFlux
+  - u_cModelFluxErr
+  - g_cModelFluxErr
+  - r_cModelFluxErr
+  - i_cModelFluxErr
+  - z_cModelFluxErr
+  - y_cModelFluxErr
   - detect_isPrimary
   - refExtendedness
   - tract
   - patch
 
 # --- Input column type and patterns ---
-input_col_type: "flux"  # Options: "flux" or "mag"
-input_col_model: "gaap1p0" # Optional
-input_col_pattern: "BAND_gaap1p0Flux"
-input_err_pattern: "BAND_gaap1p0FluxErr"
+input_col_type: "flux"  # Options: "flux", "mag", "flux_dered", "mag_dered"
+input_col_model: "cModel" # Optional
+input_col_pattern: "BAND_cModelFlux"
+input_err_pattern: "BAND_cModelFluxErr"
 
 # --- ID and coordinate columns ---
 id_col: "objectId"
@@ -73,14 +73,15 @@ A_EBV:
 
 # --- Output options ---
 DP_save_the_data: true
-save_output_as: "parquet"  # Options: "parquet", "csv", "hdf5"
+save_output_as: "hdf5"  # Options: "parquet", "csv", "hdf5"
 DP_repartition_files: true
-DP_target_rows_per_part: 130000
+DP_target_rows_per_part: 1000000
+DP_order_by: "tract"
 
 # --- Output column name customization ---
 DP_pesonalized_which_band_case: "lower_case"  # Options: "lower_case", "upper_case", "none"
 DP_col_final_name_pattern: "flux_BAND"
-DP_err_final_name_pattern: "flurerr_BAND"
+DP_err_final_name_pattern: "fluxerr_BAND"
 
 # --- Magnitude and dereddening ---
 DP_compute_magnitude: false
@@ -88,13 +89,13 @@ DP_compute_dereddening: true
 DP_keep_flux_columns_when_computing_mag_or_dered: false
 
 # --- Rounding options ---
-DP_round_col: false
+DP_round_col: true
 DP_round_col_decimal_cases: 5
-DP_round_err: false
+DP_round_err: true
 DP_round_err_decimal_cases: 5
 
 # --- Invalid value handling ---
-DP_replace_invalid_values: false
+DP_replace_invalid_values: true
 
 # Options:
 # - "all": replace all invalid values
@@ -108,7 +109,7 @@ DP_how_to_replace_col_values: "all"
 # - null: do not replace
 DP_how_to_replace_err_values: "only_with_invalid_col"
 
-DP_cross_invalidate: true
+DP_cross_invalidate: false
 
 # Use "null" to replace with NaN
 DP_col_value_to_replace: 999.0
@@ -117,9 +118,9 @@ DP_err_value_to_replace: 999.0
 # --- Invalidity pattern ---
 DP_is_nan_and_inf_invalid_for_col: true
 DP_is_nan_and_inf_invalid_for_err: true
-DP_set_some_limit_as_invalid_for_col: true
+DP_set_some_limit_as_invalid_for_col: false
 DP_invalid_limit_value_for_col: 999.0
-DP_set_some_limit_as_invalid_for_err: true
+DP_set_some_limit_as_invalid_for_err: false
 DP_invalid_limit_value_for_err: 999.0
 
 # ============================
