@@ -43,7 +43,7 @@ input_user_selected_cols:
   - FLAGS_I
 
 # --- Input column type and patterns ---
-input_col_type: "mag"  # Options: "flux" or "mag"
+input_col_type: "mag_dered"  # Options: "flux", "mag", "flux_dered", "mag_dered"
 input_col_model: null # Optional
 input_col_pattern: "MAG_AUTO_BAND_DERED"
 input_err_pattern: "MAGERR_AUTO_BAND"
@@ -67,6 +67,7 @@ DP_save_the_data: true
 save_output_as: "parquet"  # Options: "parquet", "csv", "hdf5"
 DP_repartition_files: true
 DP_target_rows_per_part: 130000
+DP_order_by: null
 
 # --- Output column name customization ---
 DP_pesonalized_which_band_case: "lower_case"  # Options: "lower_case", "upper_case", "none"
