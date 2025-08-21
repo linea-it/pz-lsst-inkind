@@ -79,6 +79,12 @@ DP_compute_magnitude: false
 DP_compute_dereddening: false
 DP_keep_flux_columns_when_computing_mag_or_dered: false
 
+# ── Dustmaps configuration (path & model selection) ───────────────────────────
+DP_path_to_dustmaps: "/scratch/users/luigi.silva/data_preparation/lib/python3.12/site-packages/dustmaps/data"   # parent folder, contains e.g. "sfd", "bayestar" subfolders
+DP_use_dustmap: "sfd"                   # or "bayestar", "planck", ...
+DP_distance_col_pc: null                # (optional) column name with distance in parsecs (for 3D maps)
+DP_distance_fixed_pc: null              # (optional) fixed distance in parsecs (for 3D maps)
+
 # --- Rounding options ---
 DP_round_col: false
 DP_round_col_decimal_cases: 5
