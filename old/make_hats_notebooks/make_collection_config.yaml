@@ -1,12 +1,12 @@
-# Base directory where processNNN/output and logs will be created
-base_path: /scratch/users/<your-user>/pz-lsst-inkind/doc/make_hats_notebooks/
+# Base directory where make_collection_NNN/output and logs will be created
+base_path: /scratch/users/<your-user>/pz-lsst-inkind/old/make_hats_notebooks/
 
 input_catalog:
   # Path to the directory containing the catalog files
-  path: /scratch/users/<your-user>/pz-lsst-inkind/doc/make_hats_notebooks/cleaning_dp02_truth_match_001/output
+  path: /path/to/catalog/folder
 
   # File name pattern to match catalog files
-  files: 'truth_tract*.parquet'
+  files: 'truth_tract27*.parquet'
 
   # Columns to read from the input files
   # Use YAML block style (with dashes) or inline style ([col1, col2, col3])
@@ -43,8 +43,11 @@ input_catalog:
   ra_column: ra
   dec_column: dec
 
-  # Name of the output HATS folder (inside processNNN/output)
-  hats_folder_name: dp02_truth_match_hats
+  # Name of the output collection folder (inside processNNN/output) and its subfolders
+  # Be careful! The names have a character limit (it seems the limit is 20)
+  collection_folder_name: dp02_truth_match
+  catalog_folder_name: hats
+  margin_folder_name: margin_cache
 
   # File format of the input catalog
   # Supported values: "parquet", "csv", "fits"
