@@ -1,18 +1,22 @@
 # ============================
 # PART 1 — RUN PATH SETTINGS
 # ============================
+# Round base directory. The automatically generated directories with custom names for each round will be created within this base directory.
 user_base_path: "/scratch/users/<your-user>/des_dr2_data_preparation"
 
 # ============================
 # PART 2 — RUN CONFIGURATIONS
 # ============================
 
-# --- Catalog options ---
-DP_which_release: "DES_DR2"  # Options: "LSST_DP02", "DES_DR2"
+# What release is your data from? Currently supported options: "LSST_DP02", "DES_DR2" (write the strings exactly in this form).
+DP_which_release: "DES_DR2"
+
+# If the id column is in the index, set this option to true. It performs a reset_index and transforms it into a column.
 DP_is_id_in_the_index: false
 
+# If you want to filter by any other boolean column, configure it here.
 DP_filter_by_boolean_column: false
-DP_which_boolean_column: null # or str
+DP_which_boolean_column: null
 DP_which_value_to_keep: null
 DP_drop_column_after_filter: null
 
@@ -20,11 +24,11 @@ DP_drop_column_after_filter: null
 # INPUT CONFIGURATIONS
 # ============================
 
-# --- Input catalog paths ---
+# Directory and wildcard for the catalog's input (raw) files.
 input_catalog_folder: "/data/public/des/dr2/primary/catalogs/coadd"
 input_catalog_pattern: "*.fits"
 
-# --- Selected columns from the input catalog ---
+# Select the columns from the input catalog you want to load. Flux/magnitude columns that will be used later are mandatory. If the id column is in the index, don't put it here.
 input_user_selected_cols:
   - COADD_OBJECT_ID
   - RA
@@ -42,18 +46,18 @@ input_user_selected_cols:
   - EXTENDED_CLASS_COADD
   - FLAGS_I
 
-# --- Input column type and patterns ---
-input_col_type: "mag_dered"  # Options: "flux", "mag", "flux_dered", "mag_dered"
-input_col_model: null # Optional
-input_col_pattern: "MAG_AUTO_BAND_DERED"
-input_err_pattern: "MAGERR_AUTO_BAND"
+# Here, configure your input column type, model type, and naming pattern. This must match the columns you selected above exactly (except for the word BAND, leave it as is), otherwise the pipeline may produce inconsistent and unreliable results.
+input_col_type: "mag_dered"   # Currently supported options: "flux", "mag", "flux_dered", "mag_dered"
+input_col_model: null         # Model from which the flux or magnitude comes (optional).
+input_col_pattern: "MAG_AUTO_BAND_DERED"   # Same as the selected columns above. Keep the word BAND.
+input_err_pattern: "MAGERR_AUTO_BAND"      # Same as the selected columns above. Keep the word BAND.
 
-# --- ID and coordinate columns ---
+# Input catalog id, ra, and dec columns. Must be exactly the same as the columns selected above. If "id" was in the index, place the "id" column name only here (do not place it in the columns selected above).
 id_col: "COADD_OBJECT_ID"
 ra_col: "RA"
 dec_col: "DEC"
 
-# --- Magnitude bands and conversion ---
+# Here, select the bands. Also, select the magnitude conversion parameters. This is case-sensitive, both for the bands and for the A_EBV. Make sure this matches the column names in your catalog.
 selected_bands: ["G", "R", "I", "Z", "Y"]
 MAG_OFFSET: null
 A_EBV: null
@@ -62,51 +66,64 @@ A_EBV: null
 # OUTPUT CONFIGURATIONS
 # ============================
 
-# --- Output options ---
+# Select whether to save logs and auxiliary files. Skinny table files will be saved regardless of the option. Be careful, if you put "false" here, and at the end select "true" to do the validation, the validation files will NOT be saved.
 DP_save_the_data: true
-save_output_as: "parquet"  # Options: "parquet", "csv", "hdf5"
-DP_repartition_files: true
+
+# Select the output file type for the skinny table.
+save_output_as: "parquet"  # Currently supported options:: "parquet", "csv", "hdf5"
+
+# Select whether you want to repartition files to try to achieve a target number of rows per file. The DP_order_by column will be used to order the rows before repartitioning. If you don't want to repartition, set both variables to null.
 DP_target_rows_per_part: 130000
 DP_order_by: null
 
-# --- Output column name customization ---
-DP_pesonalized_which_band_case: "lower_case"  # Options: "lower_case", "upper_case", "none"
-DP_col_final_name_pattern: "mag_BAND"
-DP_err_final_name_pattern: "magerr_BAND"
-
-# --- Magnitude and dereddening ---
+# Select whether to compute magnitude or de-redden, and whether to keep flux columns after computing magnitude.
 DP_compute_magnitude: false
 DP_compute_dereddening: false
 DP_keep_flux_columns_when_computing_mag_or_dered: false
 
-# ── Dustmaps configuration (path & model selection) ───────────────────────────
+# Dust maps settings (path & model selection)
 DP_path_to_dustmaps: "/scratch/users/luigi.silva/data_preparation/lib/python3.12/site-packages/dustmaps/data"   # parent folder, contains e.g. "sfd", "bayestar" subfolders
 DP_use_dustmap: "sfd"                   # or "bayestar", "planck", ...
 DP_distance_col_pc: null                # (optional) column name with distance in parsecs (for 3D maps)
 DP_distance_fixed_pc: null              # (optional) fixed distance in parsecs (for 3D maps)
 
-# --- Rounding options ---
+# Customize the output column names. Be consistent:
+# 1) If the input was flux and you chose to calculate magnitude, the output will be magnitude.
+# 2) If the input was flux and you didn't calculate magnitude, the output will be flux.
+# 3) If the input was magnitude, the output will be magnitude as well.
+DP_pesonalized_which_band_case: "lower_case"   # Options for the band case: "lower_case", "upper_case", "null". "null" will keep the original.
+DP_col_final_name_pattern: "mag_BAND"          # Name pattern for the output columns.
+DP_err_final_name_pattern: "magerr_BAND"       # Name pattern for the output columns.
+
+# Select whether you want to round the final column values to truncate decimal places.
 DP_round_col: false
 DP_round_col_decimal_cases: 5
 DP_round_err: false
 DP_round_err_decimal_cases: 5
 
-# --- Invalid value handling ---
+# Select whether you want to handle invalid values.
 DP_replace_invalid_values: true
 
-# Options: "all", "only_with_invalid_err", or null
+# Options for the main column (flux or mag):
+# - "all": replace all invalid values
+# - "only_with_invalid_err": replace only if the error is invalid
+# - null: do not replace
 DP_how_to_replace_col_values: "all"
 
-# Options: "all", "only_with_invalid_col", or null
+# Options for the error column (fluxerr or magerr):
+# - "all": replace all invalid errors
+# - "only_with_invalid_col": replace only if the main value is invalid
+# - null: do not replace
 DP_how_to_replace_err_values: "only_with_invalid_col"
 
+# If you choose "all" for both options above, you can choose to perform cross-invalidation, so that all main values have invalid errors and all invalid errors have invalid main values. If you didn't choose "all" for both options above, keep this one as "false".
 DP_cross_invalidate: false
 
-# Use null to replace with np.nan
+# Select the numeric value that we will replace invalid values with. Use "null" to replace with NaN.
 DP_col_value_to_replace: 99.0
 DP_err_value_to_replace: 99.0
 
-# --- Invalidity pattern ---
+# Select what we will consider as invalid values. The variables DP_set_some_limit_as_invalid... are used to filter on absolute value.
 DP_is_nan_and_inf_invalid_for_col: true
 DP_is_nan_and_inf_invalid_for_err: true
 DP_set_some_limit_as_invalid_for_col: true
@@ -131,11 +148,11 @@ CLUSTER_dask_scale_number: 26
 
 # Extra Dask configuration options (used only if CLUSTER_extra_dask_configs = true)
 CLUSTER_dask_config:
-  distributed.worker.memory.target: null        
-  distributed.worker.memory.spill: null       
-  distributed.worker.memory.pause: null         
-  distributed.worker.memory.terminate: null      
-  distributed.worker.memory.recent-to-old: null   
+  distributed.worker.memory.target: null
+  distributed.worker.memory.spill: null
+  distributed.worker.memory.pause: null  
+  distributed.worker.memory.terminate: null
+  distributed.worker.memory.recent-to-old: null
 
 # ============================
 # PART 4 — VALIDATION CONFIGURATIONS
@@ -143,12 +160,12 @@ CLUSTER_dask_config:
 DP_do_validation: true
 DP_compare_with_template: false
 
-# The template configuration is ignored when DP_compare_with_template is false
-DP_template_type: null
+# Template comparison configuration
+DP_template_type: null   # Options: "parquet", "fits"
 template_path: null
 template_pattern: null
 template_id_col: null
-template_target_col: null
+template_target_col: null  # Can be any column: e.g. "flux_BAND", "mag_BAND", etc.
 
 selected_bands_for_comparisson: null
 template_bands_for_comparisson: null
