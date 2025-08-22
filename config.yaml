@@ -9,18 +9,18 @@ user_base_path: "/scratch/users/luigi.silva/pz-lsst-inkind/"
 # ============================
 
 # What release is your data from? Currently supported options: "LSST_DP02", "DES_DR2". 
-# A ser implementado: "LSST_DP01" and "LSST_DP1" (AINDA NÃO SUPORTADOS!)
+# (TBD) A ser implementado: "LSST_DP01" and "LSST_DP1" (AINDA NÃO SUPORTADOS!)
 DP_which_release: "LSST_DP02"  
 
 # If the id column is in the index, set this option to true. It performs a reset_index and transforms it into a column.
-DP_is_id_in_the_index: true    # Pegar info pelo release  
+DP_is_id_in_the_index: true    # (TBD) Pegar info pelo release  
 
 # If you want to filter by any other boolean column, configure it here.
 DP_filter_by_boolean_column: true
 DP_which_boolean_column: "detect_isPrimary"
 DP_which_value_to_keep: true
 DP_drop_column_after_filter: true
-# TBD: filter by maglim, s/n, etc
+# (TBD) filter by maglim, s/n, etc
 
 # ============================
 # INPUT CONFIGURATIONS
@@ -31,7 +31,7 @@ input_catalog_folder: "/data/cl/lsst/dp0_2/primary/catalogs/object"
 input_catalog_pattern: "*.parq"
 
 # Select the columns from the input catalog you want to load. Flux/magnitude columns that will be used later are mandatory. If the id column is in the index, don't put it here.
-input_user_selected_cols: # Colunas de input além daquelas de observáveis do photoz
+input_user_selected_cols: # (TBD) Colunas de input além daquelas de observáveis do photoz
   - coord_ra
   - coord_dec
   - u_cModelFlux
@@ -88,14 +88,6 @@ DP_repartition_files: true
 DP_target_rows_per_part: 1000000
 DP_order_by: "tract"
 
-# Customize the output column names. Be consistent:
-# 1) If the input was flux and you chose to calculate magnitude, the output will be magnitude.
-# 2) If the input was flux and you didn't calculate magnitude, the output will be flux.
-# 3) If the input was magnitude, the output will be magnitude as well.
-DP_pesonalized_which_band_case: "lower_case"   # Options for the band case: "lower_case", "upper_case", "null". "null" will keep the original.
-DP_col_final_name_pattern: "mag_BAND"          # Name pattern for the output columns.
-DP_err_final_name_pattern: "magerr_BAND"       # Name pattern for the output columns.
-
 # Select whether to compute magnitude or de-redden, and whether to keep flux columns after computing magnitude.
 DP_compute_magnitude: true
 DP_compute_dereddening: true
@@ -106,6 +98,14 @@ DP_path_to_dustmaps: "/scratch/users/luigi.silva/data_preparation/lib/python3.12
 DP_use_dustmap: "sfd"                   # or "bayestar", "planck", ...
 DP_distance_col_pc: null                # (optional) column name with distance in parsecs (for 3D maps)
 DP_distance_fixed_pc: null              # (optional) fixed distance in parsecs (for 3D maps)
+
+# Customize the output column names. Be consistent:
+# 1) If the input was flux and you chose to calculate magnitude, the output will be magnitude.
+# 2) If the input was flux and you didn't calculate magnitude, the output will be flux.
+# 3) If the input was magnitude, the output will be magnitude as well.
+DP_pesonalized_which_band_case: "lower_case"   # Options for the band case: "lower_case", "upper_case", "null". "null" will keep the original.
+DP_col_final_name_pattern: "mag_BAND"          # Name pattern for the output columns.
+DP_err_final_name_pattern: "magerr_BAND"       # Name pattern for the output columns.
 
 # Select whether you want to round the final column values to truncate decimal places.
 DP_round_col: true
